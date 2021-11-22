@@ -32,6 +32,10 @@ export const getAccessToken = async (
 export interface PropertySearchResult {
   id: number;
   address: string;
+  bathrooms: number;
+  bedrooms: number;
+  carspaces: number;
+  imageUrl: string;
 }
 
 /**
@@ -68,10 +72,17 @@ export const searchProperties = async (
 
   const json = await response.json();
 
-  return json.map((prop: any) => {
+  console.log(json);
+  
+
+  return json.map((prop: any): PropertySearchResult => {
     return {
       id: prop.listing.id,
       address: prop.listing.propertyDetails.displayableAddress,
+      bathrooms: prop.listing.propertyDetails.bathrooms,
+      bedrooms: prop.listing.propertyDetails.bedrooms,
+      carspaces: prop.listing.propertyDetails.carspaces ?? 0,
+      imageUrl: prop.listing.media.find((media: any) => media.category === "Image").url ?? ""
     };
   });
 };

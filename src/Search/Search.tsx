@@ -1,4 +1,6 @@
+import { Card, CardContent, TextField, Typography } from "@mui/material";
 import { useState } from "react";
+import { PropertyCard } from "../PropertyCard/PropertyCard";
 import { PropertySearchResult, searchProperties } from "../searchProvider";
 
 interface SearchProps {
@@ -20,12 +22,14 @@ export const Search = (props: SearchProps) => {
 
     //Clear form if nothing entered
     if (q === "") {
-        updateResults([]);
+      updateResults([]);
     } else {
-        //Fetch properties
-        queryTimeout = setTimeout(() => {
-          searchProperties(props.accessToken, q).then((res) => updateResults(res));
-        }, 500);
+      //Fetch properties
+      queryTimeout = setTimeout(() => {
+        searchProperties(props.accessToken, q).then((res) =>
+          updateResults(res)
+        );
+      }, 500);
     }
   };
 
@@ -35,32 +39,35 @@ export const Search = (props: SearchProps) => {
   };
 
   return (
-    <div>
-      <div
-        style={{
-          backgroundColor: "black",
-          textAlign: "center",
-          color: "white",
-        }}
-      >
-        Search
-      </div>
-      <input
-        id="search-input"
-        style={{ width: "100%", boxSizing: "border-box" }}
-        type="text"
-        value={query}
-        onChange={changeQuery}
-        placeholder="Enter suburb"
-      />
-      {results.map((result) => (
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <span>{result.address}</span>
-          <button onClick={() => props.onFavouriteChanged(result)}>
-            {props.favourited.find(f => f.id === result.id) ? "★" : "☆"}
-          </button>
-        </div>
-      ))}
-    </div>
+    <Card>
+      <CardContent>
+        <Typography
+          gutterBottom
+          borderBottom="1px solid gray"
+          variant="h4"
+          component="div"
+        >
+          Search properties
+        </Typography>
+        <TextField
+          id="search-input"
+          style={{ width: "100%" }}
+          type="text"
+          value={query}
+          onChange={changeQuery}
+          placeholder="Enter suburb"
+        />
+        {results.map((result) => (
+          <PropertyCard
+            {...result}
+            key={result.id}
+            onFavouriteToggled={() => props.onFavouriteChanged(result)}
+            favourited={Boolean(
+              props.favourited.find((fav) => fav.id === result.id)
+            )}
+          />
+        ))}
+      </CardContent>
+    </Card>
   );
 };

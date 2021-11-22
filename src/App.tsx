@@ -1,3 +1,4 @@
+import { Container, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Favourite } from "./Favourite/Favourite";
 import { Search } from "./Search/Search";
@@ -15,7 +16,7 @@ function App() {
   }, []);
 
   const toggleFavourite = (result: PropertySearchResult) => {
-    if (favourited.find(f => f.id === result.id)) {
+    if (favourited.find((f) => f.id === result.id)) {
       updateFavourited(favourited.filter((f) => f.id !== result.id));
     } else {
       updateFavourited([...favourited, result]);
@@ -23,21 +24,24 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header"></header>
+      <Container>
+        <Grid spacing={3} container>
+          <Grid xs={6} item>
+            <Search
+              accessToken={accessToken}
+              favourited={favourited}
+              onFavouriteChanged={toggleFavourite}
+            />
+          </Grid>
 
-      <div style={{ width: "50%", float: "left" }}>
-        <Search
-          accessToken={accessToken}
-          favourited={favourited}
-          onFavouriteChanged={toggleFavourite}
-        />
-      </div>
-
-      <div style={{ width: "50%", float: "right" }}>
-        <Favourite favourited={favourited} onFavouriteChanged={toggleFavourite} />
-      </div>
-    </div>
+          <Grid xs={6} item>
+            <Favourite
+              favourited={favourited}
+              onFavouriteChanged={toggleFavourite}
+            />
+          </Grid>
+        </Grid>
+      </Container>
   );
 }
 
